@@ -4,68 +4,6 @@ import '../../domain/entities/weather.dart';
 part 'weather_model.g.dart';
 
 @JsonSerializable()
-class WeatherModel extends Weather {
-  @JsonKey(name: 'name')
-  final String cityName;
-
-  @JsonKey(name: 'main')
-  final MainModel main;
-
-  @JsonKey(name: 'weather')
-  final List<WeatherDetailModel> weather;
-
-  @JsonKey(name: 'wind')
-  final WindModel wind;
-
-  @JsonKey(name: 'dt')
-  final int timestamp;
-
-  WeatherModel({
-    required this.cityName,
-    required this.main,
-    required this.weather,
-    required this.wind,
-    required this.timestamp,
-  }) : super(
-         cityName: cityName,
-         temperature: 0,
-         description: '',
-         icon: '',
-         feelsLike: 0,
-         humidity: 0,
-         windSpeed: 0,
-         dateTime: DateTime.now(),
-       );
-
-  factory WeatherModel.fromJson(Map<String, dynamic> json) =>
-      _$WeatherModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$WeatherModelToJson(this);
-
-  @override
-  double get temperature => main.temp - 273.15;
-
-  @override
-  String get description => weather.first.description;
-
-  @override
-  String get icon => weather.first.icon;
-
-  @override
-  double get feelsLike => main.feelsLike - 273.15;
-
-  @override
-  int get humidity => main.humidity;
-
-  @override
-  double get windSpeed => wind.speed;
-
-  @override
-  DateTime get dateTime =>
-      DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-}
-
-@JsonSerializable()
 class MainModel {
   final double temp;
   @JsonKey(name: 'feels_like')
@@ -107,4 +45,45 @@ class WindModel {
       _$WindModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$WindModelToJson(this);
+}
+
+@JsonSerializable()
+class WeatherModel extends Weather {
+  @JsonKey(name: 'name')
+  final String cityName;
+
+  @JsonKey(name: 'main')
+  final MainModel main;
+
+  @JsonKey(name: 'weather')
+  final List<WeatherDetailModel> weatherDetails;
+
+  @JsonKey(name: 'wind')
+  final WindModel wind;
+
+  @JsonKey(name: 'dt')
+  final int timestamp;
+
+  WeatherModel({
+    required this.cityName,
+    required this.main,
+    required this.weatherDetails,
+    required this.wind,
+    required this.timestamp,
+  }) : super(
+         cityName: cityName,
+         temperature: main.temp - 273.15,
+         description:
+             weatherDetails.isNotEmpty ? weatherDetails.first.description : '',
+         icon: weatherDetails.isNotEmpty ? weatherDetails.first.icon : '',
+         feelsLike: main.feelsLike - 273.15,
+         humidity: main.humidity,
+         windSpeed: wind.speed,
+         dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp * 1000),
+       );
+
+  factory WeatherModel.fromJson(Map<String, dynamic> json) =>
+      _$WeatherModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WeatherModelToJson(this);
 }

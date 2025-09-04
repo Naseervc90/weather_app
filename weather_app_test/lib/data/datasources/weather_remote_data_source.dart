@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:weather_app_test/data/models/forcast_model.dart';
-import '../models/weather_model.dart';
-
 import '../../core/constants/api_constants.dart';
 import '../../core/error/exceptions.dart';
+import '../../data/models/weather_model.dart';
+import '../../data/models/forecast_model.dart';
 
 abstract class WeatherRemoteDataSource {
   Future<WeatherModel> getCurrentWeather(String cityName);
