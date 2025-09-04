@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;
+import 'presentation/bloc/theme_event.dart';
+import 'presentation/bloc/theme_state.dart';
 import 'presentation/bloc/weather_bloc.dart';
 import 'presentation/bloc/theme_bloc.dart';
 import 'presentation/pages/weather_page.dart';
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Weather App',
             theme: _buildLightTheme(),
             darkTheme: _buildDarkTheme(),

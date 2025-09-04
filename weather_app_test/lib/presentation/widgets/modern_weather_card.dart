@@ -12,15 +12,25 @@ class ModernWeatherCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Safe access to properties with fallback values
+    final cityName =
+        weather.cityName.isNotEmpty ? weather.cityName : 'Unknown City';
+    final temperature = weather.temperature.toStringAsFixed(1);
+    final description =
+        weather.description.isNotEmpty
+            ? weather.description.toUpperCase()
+            : 'NO DATA';
+    final icon = weather.icon.isNotEmpty ? weather.icon : '01d';
+    final feelsLike = weather.feelsLike.toStringAsFixed(1);
+    final humidity = weather.humidity.toString();
+    final windSpeed = weather.windSpeed.toStringAsFixed(1);
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        color:
-            isDark
-                ? const Color(0xFF1E2B3C) // Dark blue card
-                : Colors.white,
+        color: isDark ? const Color(0xFF1E2B3C) : Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -32,7 +42,7 @@ class ModernWeatherCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            weather.cityName,
+            cityName,
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w600,
@@ -50,7 +60,7 @@ class ModernWeatherCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: CachedNetworkImage(
-              imageUrl: '${ApiConstants.iconBaseUrl}${weather.icon}@2x.png',
+              imageUrl: '${ApiConstants.iconBaseUrl}$icon@2x.png',
               width: 80,
               height: 80,
               placeholder: (context, url) => const CircularProgressIndicator(),
@@ -67,7 +77,7 @@ class ModernWeatherCard extends StatelessWidget {
 
           // Temperature
           Text(
-            '${weather.temperature.round()}°',
+            '${double.parse(temperature).round()}°',
             style: TextStyle(
               fontSize: 64,
               fontWeight: FontWeight.w300,
@@ -77,7 +87,7 @@ class ModernWeatherCard extends StatelessWidget {
 
           // Description
           Text(
-            weather.description.toUpperCase(),
+            description,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -95,19 +105,19 @@ class ModernWeatherCard extends StatelessWidget {
               _buildWeatherDetail(
                 icon: Icons.thermostat,
                 label: 'Feels like',
-                value: '${weather.feelsLike.round()}°',
+                value: '${double.parse(feelsLike).round()}°',
                 isDark: isDark,
               ),
               _buildWeatherDetail(
                 icon: Icons.water_drop,
                 label: 'Humidity',
-                value: '${weather.humidity}%',
+                value: '$humidity%',
                 isDark: isDark,
               ),
               _buildWeatherDetail(
                 icon: Icons.air,
                 label: 'Wind',
-                value: '${weather.windSpeed.toStringAsFixed(1)} m/s',
+                value: '$windSpeed m/s',
                 isDark: isDark,
               ),
             ],

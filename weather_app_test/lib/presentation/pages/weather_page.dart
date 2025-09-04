@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app_test/presentation/widgets/forcast_card.dart';
+import '../../core/utils/constants.dart';
+import '../bloc/theme_event.dart';
 import '../bloc/weather_bloc.dart';
-import '../bloc/weather_event.dart' hide ThemeToggled;
+import '../bloc/weather_event.dart';
 import '../bloc/weather_state.dart';
 import '../bloc/theme_bloc.dart';
+import '../widgets/forcast_card.dart';
 import '../widgets/modern_weather_card.dart';
 import '../widgets/modern_search_widget.dart';
-
 import '../widgets/error_widget.dart';
 
-class WeatherPage extends StatelessWidget {
+class WeatherPage extends StatefulWidget {
   const WeatherPage({Key? key}) : super(key: key);
+
+  @override
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Load default city weather when app starts
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        try {
+          context.read<WeatherBloc>().add(
+            WeatherRequested(AppConstants.defaultCity),
+          );
+        } catch (e) {
+          print('❌ Error loading default city: $e');
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark
-              ? const Color(0xFF0D1B2A) // Dark background like in image
-              : Colors.grey.shade50,
+      backgroundColor: isDark ? const Color(0xFF0D1B2A) : Colors.grey.shade50,
       body: SafeArea(
         child: Column(
           children: [

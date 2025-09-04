@@ -1,21 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'theme_event.dart';
+import 'theme_state.dart';
 
-// Theme Events
-abstract class ThemeEvent {}
-
-class ThemeToggled extends ThemeEvent {}
-
-class ThemeInitialized extends ThemeEvent {}
-
-// Theme States
-abstract class ThemeState {}
-
-class LightTheme extends ThemeState {}
-
-class DarkTheme extends ThemeState {}
-
-// Theme BLoC
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc() : super(DarkTheme()) {
     on<ThemeToggled>(_onThemeToggled);

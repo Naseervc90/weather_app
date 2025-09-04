@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 abstract class NetworkInfo {
-  Future<bool> isConnected();
+  Future<bool> get isConnected;
 }
 
 class NetworkInfoImpl implements NetworkInfo {
@@ -10,7 +10,7 @@ class NetworkInfoImpl implements NetworkInfo {
   NetworkInfoImpl(this.connectivity);
 
   @override
-  Future<bool> isConnected() async {
+  Future<bool> get isConnected async {
     final connectivityResult = await connectivity.checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
   }

@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app_test/domain/usecases/get_five_day_forcast.dart';
 import 'core/network/network_info.dart';
 import 'data/datasources/weather_remote_data_source.dart';
@@ -13,7 +15,9 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // BLoC
-  sl.registerFactory(() => WeatherBloc(sl(), sl()));
+  sl.registerFactory(
+    () => WeatherBloc(getCurrentWeather: sl(), getFiveDayForecast: sl()),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => GetCurrentWeather(sl()));
@@ -30,8 +34,10 @@ Future<void> init() async {
   );
 
   // Core
-  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   // External
   sl.registerLazySingleton(() => http.Client());
+  sl.registerLazySingleton(() => Connectivity());
+  sl.registerLazySingleton(() => SharedPreferences.getInstance());
 }

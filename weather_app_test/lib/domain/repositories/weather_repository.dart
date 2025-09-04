@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:weather_app_test/domain/entities/forcast.dart';
+import '../entities/forcast.dart';
 import '../entities/weather.dart';
 
 import '../../core/error/failure.dart';

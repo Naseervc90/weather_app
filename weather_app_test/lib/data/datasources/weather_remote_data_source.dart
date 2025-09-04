@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:weather_app_test/data/models/forcast_model.dart';
 import '../../core/constants/api_constants.dart';
 import '../../core/error/exceptions.dart';
 import '../../data/models/weather_model.dart';
-import '../../data/models/forecast_model.dart';
 
 abstract class WeatherRemoteDataSource {
   Future<WeatherModel> getCurrentWeather(String cityName);
@@ -24,8 +24,12 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
     final response = await client.get(url);
 
     if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      return WeatherModel.fromJson(json);
+      try {
+        final json = jsonDecode(response.body);
+        return WeatherModel.fromJson(json);
+      } catch (e) {
+        throw ServerException();
+      }
     } else if (response.statusCode == 404) {
       throw CityNotFoundException(cityName);
     } else if (response.statusCode == 401) {
@@ -44,8 +48,12 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
     final response = await client.get(url);
 
     if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      return ForecastModel.fromJson(json);
+      try {
+        final json = jsonDecode(response.body);
+        return ForecastModel.fromJson(json);
+      } catch (e) {
+        throw ServerException();
+      }
     } else if (response.statusCode == 404) {
       throw CityNotFoundException(cityName);
     } else if (response.statusCode == 401) {
